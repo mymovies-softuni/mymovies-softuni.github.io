@@ -2,7 +2,7 @@ import { renderMiddleware } from './middlewares/renderMiddleware.js';
 import { authMiddleware } from './middlewares/authMiddleware.js';
 import { navigationMiddleware } from './middlewares/navigationMiddleware.js';
 
-import page from '../node_modules/page/page.mjs';
+import page from "//unpkg.com/page/page.mjs"
 
 import { homePage } from './views/homeView.js';
 import { loginPage } from './views/loginView.js';

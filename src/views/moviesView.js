@@ -1,5 +1,4 @@
-import { html } from "../../node_modules/lit-html/lit-html.js";
-import { getData } from "../services/authService.js";
+import { html } from 'https://unpkg.com/lit-html?module'
 import { getAll, getMyMovies } from "../services/moviesService.js";
 
 

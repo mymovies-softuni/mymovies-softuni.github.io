@@ -1,4 +1,4 @@
-import { html } from "../../node_modules/lit-html/lit-html.js";
+import { html } from 'https://unpkg.com/lit-html?module'
 import { deleteMovie, getMovie } from "../services/moviesService.js";
 
 const movieTemplate = (movie, isOwner, onDelete) => html`
