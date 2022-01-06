@@ -10,14 +10,16 @@ import { moviesPage, myMoviesPage } from './views/moviesView.js';
 import { moviePage } from './views/movieView.js';
 import { addMoviePage } from './views/addMovie.js';
 import { editPage } from './views/editMovieView.js';
+import { registerPage } from './views/registerView.js';
 
 
 page(renderMiddleware);
 page(authMiddleware);
 page(navigationMiddleware);
 
-page('/', homePage);
+page('/', moviesPage);
 page('/login', loginPage);
+page('/register', registerPage);
 page('/movies', moviesPage);
 page('/movies/add', addMoviePage);
 page('/movies/my-movies', myMoviesPage);

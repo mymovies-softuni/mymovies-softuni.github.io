@@ -44,6 +44,10 @@ body {
     vertical-align: top;
 }
 
+.card img {
+  height: 380px;
+}
+
 .myCard {
     float: left;
     margin-right: 10px;

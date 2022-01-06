@@ -29,7 +29,7 @@ export function loginPage(ctx) {
 
         authService.login(email, password)
             .then(() => {
-                ctx.page.redirect('/');
+                ctx.page.redirect('/movies');
             });
     }
     ctx.render(loginTemplate(onLogin));

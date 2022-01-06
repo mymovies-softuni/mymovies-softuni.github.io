@@ -34,6 +34,13 @@ export function logout() {
     localStorage.clear();
 }
 
+export function register(email, password) {
+    return request.post(api.register, {email, password})
+        .then(data => {
+            storeUserData(data);
+        });
+}
+
 export function isAuthenticated() {
     const token = localStorage.getItem('accessToken');
     return Boolean(token);

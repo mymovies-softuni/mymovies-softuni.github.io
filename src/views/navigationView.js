@@ -1,7 +1,8 @@
-import { html } from 'https://unpkg.com/lit-html?module'
-import * as authService from '../services/authService.js'
+import { html } from 'https://unpkg.com/lit-html?module';
+import * as authService from '../services/authService.js';
+import * as movieService from '../services/moviesService.js';
 
-const navigationTemplate = (isAuthenticated, email, onLogout) => html`
+const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
 <div class="container-fluid">
     <a class="navbar-brand" href="/">Hollywood Storage</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -25,6 +26,10 @@ const navigationTemplate = (isAuthenticated, email, onLogout) => html`
             : null
         }
     </ul>
+    <form class="d-flex" @submit=${onSearch}>
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
     <ul class="navbar-nav ms-auto">
         ${ isAuthenticated 
             ? html`
@@ -54,7 +59,7 @@ const navigationTemplate = (isAuthenticated, email, onLogout) => html`
 `;
 
 export function renderNavigation(ctx) {
-    return navigationTemplate(ctx.isAuthenticated, ctx.email, onLogout);
+    return navigationTemplate(ctx.isAuthenticated, ctx.email, onLogout, onSearch);
 
     function onLogout(e) {
         e.preventDefault();
@@ -62,5 +67,15 @@ export function renderNavigation(ctx) {
         ctx.page.redirect('/');
     }
 
+    function onSearch(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const searchTerm = formData.get("search").trim();
+
+        ctx.page.redirect(`/movies?search=${searchTerm}`);
+    }
+
 }
+
+
 
