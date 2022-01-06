@@ -1,5 +1,5 @@
 import { html } from 'https://unpkg.com/lit-html?module'
-import { getAll, getMyMovies } from "../services/moviesService.js";
+import { getAll, getMyMovies, search } from "../services/moviesService.js";
 
 
 const myMovies = [
@@ -47,9 +47,18 @@ const movieTemplate = (movie) => html`
 
 
 export function moviesPage(ctx) {
-    getAll().then(movies => {
-        ctx.render(moviesTemplate(movies));
-    });
+    const searchText = ctx.querystring.split('=').slice(-1).join('');
+    if(searchText) {
+        search(searchText)
+            .then(movies => {
+                ctx.render(moviesTemplate(movies))
+            })
+    } else {
+        getAll().then(movies => {
+            ctx.render(moviesTemplate(movies));
+        });
+    }
+
 }
 
 export function myMoviesPage(ctx) {

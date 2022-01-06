@@ -70,9 +70,11 @@ export function renderNavigation(ctx) {
     function onSearch(e) {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const searchTerm = formData.get("search").trim();
-
-        ctx.page.redirect(`/movies?search=${searchTerm}`);
+        const searchTerm = encodeURIComponent(formData.get("search").trim());
+        if(searchTerm && searchTerm !== '') {
+            ctx.page.redirect(`/movies?search=${searchTerm}`);
+        }
+        
     }
 
 }
