@@ -1,4 +1,5 @@
 import { html } from 'https://unpkg.com/lit-html?module';
+import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
 import * as authService from '../services/authService.js';
 
 const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
@@ -65,8 +66,16 @@ export function renderNavigation(ctx) {
 
     async function onLogout(e) {
         e.preventDefault();
-        const response = await authService.logout();
-        ctx.page.redirect('/');
+        try {
+            const response = await authService.logout();
+            if(response) {
+                ctx.page.redirect('/');
+                toggleNotification(ctx, { content: 'Successfully logged out!', type: 'success'});
+            }
+        } catch (err) {
+            toggleNotification(ctx, { content: err, type: 'danger'});
+        }
+ 
     }
 
     function onSearch(e) {

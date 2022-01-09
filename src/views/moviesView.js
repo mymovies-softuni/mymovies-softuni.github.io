@@ -1,5 +1,5 @@
 import { html } from 'https://unpkg.com/lit-html?module'
-import { getAllMovies, getMyMovies, searchMovie } from "../services/moviesService.js";
+import { getAllMovies, getMyMovies, searchMovie, countMovies } from "../services/moviesService.js";
 
 const moviesTemplate = (movies) => html`
     <h2>Movies Page</h2>
@@ -23,13 +23,13 @@ export async function moviesPage(ctx) {
     try {
         if(searchText) {
             const movies = await searchMovie(searchText);
-            console.log(movies)
             ctx.render(moviesTemplate(movies));
         } else {
             const movies = await getAllMovies();
-            console.log(movies);
             ctx.render(moviesTemplate(movies));
         }
+
+
     } catch (err) {
         alert(err);
     }

@@ -1,5 +1,7 @@
 import { html } from 'https://unpkg.com/lit-html?module'
 import * as authService from '../services/authService.js';
+import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
+
 
 const registerTemplate = (onRegister) => html`
 
@@ -36,8 +38,9 @@ export function registerPage(ctx) {
         try {
             const response = await authService.register(username, password, email).signUp();
             ctx.page.redirect('/');
+            toggleNotification(ctx, { content: 'Your successfully registered in our movie portal.', type: 'success'});
         } catch(err) {
-            return err;
+            toggleNotification(ctx, { content: err, type: 'danger'});
         }
         
         

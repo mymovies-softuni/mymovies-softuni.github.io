@@ -26,6 +26,7 @@ export async function logout() {
     if(isAuthenticated()) {
         try {
             const response = Parse.User.logOut();
+            return response
         } catch(err) {
             return err;
         }

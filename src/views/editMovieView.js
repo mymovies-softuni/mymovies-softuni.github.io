@@ -1,4 +1,5 @@
 import { html } from 'https://unpkg.com/lit-html?module';
+import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
 import { getMovie, parseMoviesData, updateMovie } from '../services/moviesService.js';
 
 const updateMovieTemplate = (movie, onSave) => html`
@@ -19,7 +20,7 @@ const updateMovieTemplate = (movie, onSave) => html`
 export async function editPage(ctx) {
     try {
         let movie = await getMovie(ctx.params.id);
-        movie = parseMoviesData(movie).pop();
+        movie = parseMoviesData(movie);
         ctx.render(updateMovieTemplate(movie, onSave));
     } catch(err) {
         alert(err);
@@ -34,16 +35,17 @@ export async function editPage(ctx) {
 
         if((title && title !== '') && (desc && desc !== '') && (img && img !== '')) {
             try {
-                let result = await updateMovie(ctx.params.id, title, desc, img);
-                result.save();
-                ctx.page.redirect('/movies/' + ctx.params.id);
+                const movie = await updateMovie(ctx.params.id, title, desc, img);
+                if(movie) {
+                    ctx.page.redirect('/movies/' + ctx.params.id);
+                    toggleNotification(ctx, { content: `Sucessfully updated ${movie.get('title')}.`, type: 'success'});
+                }
+
             } catch(err) {
-                alert(err);
+                toggleNotification(ctx, { content: `Sucessfully updated ${movie.id}.`, type: 'danger'})
             }
-
-
         } else {
-            return;
+            toggleNotification(ctx, { content: `Please make sure that all the fields are filled in.`, type: 'info'});
         } 
             
     }

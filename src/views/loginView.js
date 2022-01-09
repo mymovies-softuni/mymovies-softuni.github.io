@@ -1,5 +1,7 @@
 import { html } from 'https://unpkg.com/lit-html?module'
 import * as authService from '../services/authService.js';
+import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
+
 
 const loginTemplate = (onLogin) => html`
 
@@ -30,8 +32,10 @@ export function loginPage(ctx) {
         try {
             const user = await authService.login(username, password)
             ctx.page.redirect('/movies');
+            toggleNotification(ctx, { content: 'Successfully logged in!', type: 'success'});
         } catch(err) {
-            alert("Invalid Username or Password!");
+            toggleNotification(ctx, { content: err, type: 'danger'});
+
         }
         
     }

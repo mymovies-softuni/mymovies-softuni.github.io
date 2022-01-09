@@ -17,13 +17,18 @@ export const createMovie = (title, description, imgUrl) => {
 export const updateMovie = async (id, title, description, imgUrl) => {
     const Movie = Parse.Object.extend('Movie');
     try {
-        let movie = await getMovie(id);
-        movie[0].set('title', title);
-        movie[0].set('description', description);
-        movie[0].set('imgUrl', imgUrl);
+        let [ movie ] = [...await getMovie(id)];
+        movie.set('title', title);
+        movie.set('description', description);
+        movie.set('imgUrl', imgUrl);
 
-        return movie[0];
-
+        try {
+            movie = await movie.save();
+            return movie;
+        } catch(err) {
+            return err;
+        }
+        
     } catch (err) {
         return err;
     }
@@ -36,7 +41,7 @@ export const getMovie = async (id) => {
     const movieQuery = new Parse.Query(Movie);
     movieQuery.get(id)
     try {
-        const movie = await movieQuery.find()
+        const movie = await movieQuery.find();
         return movie;
     } catch(err) {
         return err;
@@ -91,17 +96,32 @@ export const searchMovie = async (text) => {
 
 }
 
-
-export function parseMoviesData(movies) {
-    return movies.reduce((acc, currentMovie) => {
-        let movieData = {
-            id: currentMovie.id,
-            ownerId: currentMovie.attributes.owner.id,
-            title: currentMovie.attributes.title,
-            description: currentMovie.attributes.description,
-            imgUrl: currentMovie.attributes.imgUrl,
+export function parseMoviesData(movie) {
+    if(movie.className == 'Movie') {
+        movie = [movie];
+    }
+    const movies = movie.reduce((acc, movie) => {
+        let currentMovie = {
+            id: movie.id,
+            title: movie.attributes.title,
+            description: movie.attributes.description,
+            imgUrl: movie.attributes.imgUrl,
+            ownerId: movie.attributes.owner.id
         }
-        acc.push(movieData);
-        return acc;
+        acc.push(currentMovie);
+        return acc
     }, []);
+    if(movies.length == 1) {
+        return movies[0];
+    }
+    return movies;
+}
+
+
+export const countMovies = async () => {
+    const Movie = Parse.Object.extend('Movie');
+    const countQuery = new Parse.Query(Movie);
+
+    const count = await countQuery.count();
+    return count
 }

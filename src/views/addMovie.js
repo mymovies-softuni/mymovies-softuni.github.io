@@ -1,5 +1,9 @@
 import { html } from 'https://unpkg.com/lit-html?module';
 import { createMovie } from '../services/moviesService.js';
+import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
+
+
+
 const addMovieTemplate = (onAdd) => html`
     <form @submit=${onAdd} class="form-signin">
         <h2 class="form-signin-heading">Create New Movie</h2>
@@ -12,7 +16,6 @@ const addMovieTemplate = (onAdd) => html`
         <button class="btn btn-lg btn-primary btn-block" type="submit">Create Movie</button>
     </form>
 `;
-
 
 
 export function addMoviePage(ctx) {
@@ -28,8 +31,9 @@ export function addMoviePage(ctx) {
                 let newMovie = createMovie(title, desc, img);
                 newMovie = await newMovie.save();
                 ctx.page.redirect('/movies/' + newMovie.id);
+                toggleNotification(ctx, { content: `Sucessfully added ${newMovie.get('title')}.`, type: 'success'});
             } catch (err) {
-                alert(err);
+                toggleNotification(ctx, { content: `${err.message}`, type: 'danger'});
             }
         }
             
