@@ -5,8 +5,8 @@ const loginTemplate = (onLogin) => html`
 
 <form  @submit=${onLogin} class="form-signin">
         <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" autocomplete="" name="email">
+        <label class="sr-only">Username</label>
+        <input type="text" class="form-control" placeholder="Username" autocomplete="" name="username">
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" autocomplete="" name="password">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
@@ -15,22 +15,25 @@ const loginTemplate = (onLogin) => html`
 `;
 
 export function loginPage(ctx) {
-    const onLogin = (e) => {
+    const onLogin = async (e) => {
         e.preventDefault();
         
         let formData = new FormData(e.currentTarget);
 
-        let email = formData.get('email');
+        let username = formData.get('username');
         let password = formData.get('password');
 
-        if(!password || !email || email == '' || password == '') {
+        if(!password || !username || username == '' || password == '') {
             return;
         }
 
-        authService.login(email, password)
-            .then(() => {
-                ctx.page.redirect('/movies');
-            });
+        try {
+            const user = await authService.login(username, password)
+            ctx.page.redirect('/movies');
+        } catch(err) {
+            alert("Invalid Username or Password!");
+        }
+        
     }
     ctx.render(loginTemplate(onLogin));
 }

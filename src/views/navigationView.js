@@ -1,6 +1,5 @@
 import { html } from 'https://unpkg.com/lit-html?module';
 import * as authService from '../services/authService.js';
-import * as movieService from '../services/moviesService.js';
 
 const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
 <div class="container-fluid">
@@ -34,7 +33,7 @@ const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
         ${ isAuthenticated 
             ? html`
                 <li class="nav-item">
-                    <a class="nav-link">Welcome, ${email}.</a>
+                    <a class="nav-link">Welcome, ${email}</a>
                 </li>             
                 <li class="nav-item">
                     <a @click=${onLogout} class="nav-link" href="javascript:void(0)">| Logout</a>
@@ -59,11 +58,14 @@ const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
 `;
 
 export function renderNavigation(ctx) {
-    return navigationTemplate(ctx.isAuthenticated, ctx.email, onLogout, onSearch);
+    const isAuthenticated = authService.isAuthenticated();
+    const currentUserEmail = authService.getCurrentUser().email;
+    console.log(authService.getCurrentUser());
+    return navigationTemplate(isAuthenticated, currentUserEmail, onLogout, onSearch);
 
-    function onLogout(e) {
+    async function onLogout(e) {
         e.preventDefault();
-        authService.logout();
+        const response = await authService.logout();
         ctx.page.redirect('/');
     }
 

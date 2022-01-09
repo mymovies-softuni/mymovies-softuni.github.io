@@ -1,4 +1,4 @@
-import { getData } from '../services/authService.js'
+// import { getData } from '../services/authService.js'
 
 function request(method, url, data) {
     let options = {
@@ -7,7 +7,7 @@ function request(method, url, data) {
             'Content-Type': 'application/json',
         }
     };
-    const token = getData().token;
+    // const token = getData().token;
 
 
     if(data) {

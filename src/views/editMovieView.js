@@ -1,5 +1,5 @@
-import { html } from 'https://unpkg.com/lit-html?module'
-import { getMovie, updateMovie } from "../services/moviesService.js";
+import { html } from 'https://unpkg.com/lit-html?module';
+import { getMovie, parseMoviesData, updateMovie } from '../services/moviesService.js';
 
 const updateMovieTemplate = (movie, onSave) => html`
     <form @submit=${onSave} class="form-signin">
@@ -7,7 +7,7 @@ const updateMovieTemplate = (movie, onSave) => html`
         <label>Title</label>
         <input type="title" class="form-control" placeholder="Movie Title" autocomplete="" name="title" .value=${movie.title}>
         <label>Image URL</label>
-        <input type="image-url" class="form-control" placeholder="Image URL" autocomplete="" name="image-url" .value=${movie.img}>
+        <input type="image-url" class="form-control" placeholder="Image URL" autocomplete="" name="image-url" .value=${movie.imgUrl}>
         <label>Description</label>
         <textarea rows="10" type="description" class="form-control" placeholder="Description" autocomplete="" name="description" .value=${movie.description}></textarea>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Save Movie</button>
@@ -16,13 +16,16 @@ const updateMovieTemplate = (movie, onSave) => html`
 
 
 
-export function editPage(ctx) {
-    getMovie(ctx.params.id)
-        .then(movie => {
-            ctx.render(updateMovieTemplate(movie, onSave));
-        })
+export async function editPage(ctx) {
+    try {
+        let movie = await getMovie(ctx.params.id).find();
+        movie = parseMoviesData(movie).pop();
+        ctx.render(updateMovieTemplate(movie, onSave));
+    } catch(err) {
+        alert(err);
+    }
 
-    function onSave(e) {
+    async function onSave(e) {
         e.preventDefault();
         const formData = new FormData(e.target);
         const title = formData.get('title');
@@ -30,10 +33,14 @@ export function editPage(ctx) {
         const img = formData.get('image-url');
 
         if((title && title !== '') && (desc && desc !== '') && (img && img !== '')) {
-            updateMovie(ctx.params.id, title, img, desc)
-                .then(data => {
-                    ctx.page.redirect(`/movies/${data._id}`);
-                });
+            try {
+                let movie = await updateMovie(ctx.params.id, title, desc, img);
+                ctx.page.redirect('/movies/' + movie.id);
+            } catch(err) {
+                alert(err);
+            }
+
+
         } else {
             return;
         } 

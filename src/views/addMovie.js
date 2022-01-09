@@ -1,6 +1,5 @@
 import { html } from 'https://unpkg.com/lit-html?module';
-import { createMovie } from "../services/moviesService.js";
-
+import { createMovie } from '../services/moviesService.js';
 const addMovieTemplate = (onAdd) => html`
     <form @submit=${onAdd} class="form-signin">
         <h2 class="form-signin-heading">Create New Movie</h2>
@@ -17,22 +16,22 @@ const addMovieTemplate = (onAdd) => html`
 
 
 export function addMoviePage(ctx) {
-    function onAdd(e) {
+    async function onAdd(e) {
         e.preventDefault();
         const formData = new FormData(e.target);
         const title = formData.get('title');
         const desc = formData.get('description');
         const img = formData.get('image-url');
 
-
-        if((title && title !== '') && (desc && desc !== '') && (img && img !== '')) {
-            createMovie(title, img, desc)
-                .then(data => {
-                    ctx.page.redirect(`/movies/${data._id}`);
-                });
-        } else {
-            return;
-        } 
+        if((title && title !== '') && (desc && desc !== '') && (img && img !== '')) {   
+            try {
+                let newMovie = createMovie(title, desc, img);
+                newMovie = await newMovie.save();
+                ctx.page.redirect('/movies/' + newMovie.id);
+            } catch (err) {
+                alert(err);
+            }
+        }
             
     }
     ctx.render(addMovieTemplate(onAdd));

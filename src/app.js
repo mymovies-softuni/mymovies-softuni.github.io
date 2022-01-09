@@ -1,5 +1,5 @@
 import { renderMiddleware } from './middlewares/renderMiddleware.js';
-import { authMiddleware } from './middlewares/authMiddleware.js';
+// import { authMiddleware } from './middlewares/authMiddleware.js';
 import { navigationMiddleware } from './middlewares/navigationMiddleware.js';
 
 import page from "//unpkg.com/page/page.mjs"
@@ -14,7 +14,7 @@ import { registerPage } from './views/registerView.js';
 
 
 page(renderMiddleware);
-page(authMiddleware);
+// page(authMiddleware);
 page(navigationMiddleware);
 
 page('/', moviesPage);

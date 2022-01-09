@@ -5,6 +5,8 @@ const registerTemplate = (onRegister) => html`
 
 <form  @submit=${onRegister} class="form-signin">
         <h2 class="form-signin-heading">Please Register</h2>
+        <label class="sr-only">Username</label>
+        <input type="text" class="form-control" placeholder="Username" autocomplete="" name="username">
         <label class="sr-only">Email address</label>
         <input type="email" class="form-control" placeholder="Email address" autocomplete="" name="email">
         <label class="sr-only">Password</label>
@@ -17,23 +19,29 @@ const registerTemplate = (onRegister) => html`
 `;
 
 export function registerPage(ctx) {
-    const onRegister = (e) => {
+    const onRegister = async (e) => {
         e.preventDefault();
         
         let formData = new FormData(e.currentTarget);
 
+        let username = formData.get('username');
         let email = formData.get('email');
         let password = formData.get('password');
         let repass = formData.get('repeat-password');
 
-        if(!password || !email || email == '' || password == '' || repass !== password) {
+        if(!password || !email || !username || email == '' || password == '' || username == '' || repass !== password ) {
             return;
         }
 
-        authService.register(email, password)
-            .then(() => {
-                ctx.page.redirect('/movies');
-            });
+        try {
+            const response = await authService.register(username, password, email).signUp();
+            ctx.page.redirect('/');
+        } catch(err) {
+            return err;
+        }
+        
+        
+
     }
     ctx.render(registerTemplate(onRegister));
 }

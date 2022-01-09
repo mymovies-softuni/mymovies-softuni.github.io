@@ -1,10 +1,11 @@
-import { html } from 'https://unpkg.com/lit-html?module'
-import { deleteMovie, getMovie } from "../services/moviesService.js";
+import { html } from 'https://unpkg.com/lit-html?module';
+import { getMovie, parseMoviesData } from '../services/moviesService.js';
+import { getCurrentUser } from '../services/authService.js';
 
 const movieTemplate = (movie, isOwner, onDelete) => html`
 <div>
     <div class="myCard" style="width: 18rem;">
-        <img src="${movie.img}" class="card-img-top" alt="...">
+        <img src="${movie.imgUrl}" class="card-img-top" alt="...">
     </div>
     <div class="myCardBody">
         <h5 class="card-title" .textContent=${movie.title}></h5>
@@ -14,7 +15,7 @@ const movieTemplate = (movie, isOwner, onDelete) => html`
 
 
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <a class="btn btn-sm btn-outline-secondary" href="/movies/${movie._id}/edit">Edit</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="/movies/${movie.id}/edit">Edit</a>
                     <a @click=${onDelete} class="btn btn-sm btn-outline-danger" href="javascript:void(0)">Delete</a>
                 </div>
             `
@@ -25,11 +26,15 @@ const movieTemplate = (movie, isOwner, onDelete) => html`
 </div>
 `;
 
-export function moviePage(ctx) {
-    getMovie(ctx.params.id).then(m => {
-        let isOwner = ctx.id === m._ownerId
-        ctx.render(movieTemplate(m, isOwner, onDelete));
-    })
+export async function moviePage(ctx) {
+    try {
+        let movie = await getMovie(ctx.params.id).find();
+        movie = parseMoviesData(movie).pop();
+        let isOwner = getCurrentUser().id === movie.ownerId;
+        ctx.render(movieTemplate(movie, isOwner, onDelete));
+    } catch(err) {
+        return err;
+    }
 
     function onDelete(e) {
         e.preventDefault();
