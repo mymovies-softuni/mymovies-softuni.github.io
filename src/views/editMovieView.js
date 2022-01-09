@@ -18,7 +18,7 @@ const updateMovieTemplate = (movie, onSave) => html`
 
 export async function editPage(ctx) {
     try {
-        let movie = await getMovie(ctx.params.id).find();
+        let movie = await getMovie(ctx.params.id);
         movie = parseMoviesData(movie).pop();
         ctx.render(updateMovieTemplate(movie, onSave));
     } catch(err) {
@@ -34,8 +34,9 @@ export async function editPage(ctx) {
 
         if((title && title !== '') && (desc && desc !== '') && (img && img !== '')) {
             try {
-                let movie = await updateMovie(ctx.params.id, title, desc, img);
-                ctx.page.redirect('/movies/' + movie.id);
+                let result = await updateMovie(ctx.params.id, title, desc, img);
+                result.save();
+                ctx.page.redirect('/movies/' + ctx.params.id);
             } catch(err) {
                 alert(err);
             }

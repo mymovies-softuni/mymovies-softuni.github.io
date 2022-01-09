@@ -28,7 +28,7 @@ const movieTemplate = (movie, isOwner, onDelete) => html`
 
 export async function moviePage(ctx) {
     try {
-        let movie = await getMovie(ctx.params.id).find();
+        let movie = await getMovie(ctx.params.id);
         movie = parseMoviesData(movie).pop();
         let isOwner = getCurrentUser().id === movie.ownerId;
         ctx.render(movieTemplate(movie, isOwner, onDelete));

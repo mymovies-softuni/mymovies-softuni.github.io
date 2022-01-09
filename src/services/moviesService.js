@@ -4,31 +4,26 @@ Parse.serverURL = 'https://parseapi.back4app.com';
 export const createMovie = (title, description, imgUrl) => {
     const Movie = Parse.Object.extend('Movie');
     let newMovie = new Movie();
-    const currentUser = Parse.User.current();
-
+    let currentUser = Parse.User.current();
+    
+    newMovie.set('owner', currentUser);
     newMovie.set('title', title);
     newMovie.set('description', description);
     newMovie.set('imgUrl', imgUrl);
-    newMovie.set('owner', currentUser);
     
     return newMovie;
 }
 
 export const updateMovie = async (id, title, description, imgUrl) => {
     const Movie = Parse.Object.extend('Movie');
-    const currentUser = Parse.User.current();
     try {
-        let movie = await getMovie(id).find();
+        let movie = await getMovie(id);
         movie[0].set('title', title);
         movie[0].set('description', description);
         movie[0].set('imgUrl', imgUrl);
-        movie[0].set('owner', currentUser);
-        try {
-            movie = await movie[0].save();
-            return movie;
-        } catch(err) {
-            return err;
-        }
+
+        return movie[0];
+
     } catch (err) {
         return err;
     }
@@ -36,11 +31,17 @@ export const updateMovie = async (id, title, description, imgUrl) => {
 
 
 
-export const getMovie = (id) => {
+export const getMovie = async (id) => {
     const Movie = Parse.Object.extend('Movie');
     const movieQuery = new Parse.Query(Movie);
     movieQuery.get(id)
-    return movieQuery;
+    try {
+        const movie = await movieQuery.find()
+        return movie;
+    } catch(err) {
+        return err;
+    }
+
 }
 
 export const getAllMovies = async () => {
