@@ -7,7 +7,7 @@ const moviesTemplate = (movies, activePage, totalPages) => html`
 
     <nav id="pagination" aria-label="Page navigation example">
         <ul class="pagination">
-            ${totalPages.map(page => html`<li class="page-item"><a class="page-link" href="/movies?page=${page}" ${activePage == page ? 'active' : null}>${page}</a></li>`)}
+            ${totalPages.map(page => html`<li class="page-item ${activePage == page ? 'active' : null}"><a class="page-link" href="/movies?page=${page}">${page}</a></li>`)}
         </ul>
     </nav>
     <div id="movies">
