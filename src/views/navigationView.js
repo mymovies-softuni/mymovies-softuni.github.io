@@ -21,7 +21,7 @@ const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
         ${ isAuthenticated
             ? html`        
                 <li class="nav-item">
-                    <a class="nav-link" href="/movies/my-movies"> My Movies</a>
+                    <a class="nav-link" href="/movies/my-movies?page=1">My Movies</a>
                 </li>
             `
             : null

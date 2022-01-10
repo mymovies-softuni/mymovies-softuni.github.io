@@ -132,13 +132,17 @@ export const retrieveQuery = (string) => {
     return queryObj;
 }
 
-export const paginateMovies = async (page, searchTerm) => {
+export const paginateMovies = async (page, searchTerm, user) => {
     page = Number(page);
     const Movie = Parse.Object.extend('Movie');
     const paginateQuery = new Parse.Query(Movie);
 
     if(searchTerm) {
         paginateQuery.fullText('title', searchTerm);
+    }
+
+    if(user) {
+        paginateQuery.equalTo('owner', user);
     }
 
     if(page > 1) {

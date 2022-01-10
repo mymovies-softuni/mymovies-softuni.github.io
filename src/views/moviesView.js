@@ -54,10 +54,19 @@ export async function moviesPage(ctx) {
     }
 }
 
-export function myMoviesPage(ctx) {
-    getMyMovies().then(movies => {
-        console.log(movies);
-        ctx.render(moviesTemplate(movies));
-    });
+export async function myMoviesPage(ctx) {
+    const searchTerms = retrieveQuery(ctx.querystring);
+    searchTerms.page ? searchTerms : searchTerms.page = '1';
+    let paginatedMovie = await paginateMovies(searchTerms.page, null, Parse.User.current());
+    paginatedMovie = parseMoviesData(paginatedMovie);
+    let pages = await getMyMovies();
+    pages = (pages.length / 6) + 1
+    const totalPages = [];
+    for (let i = 1; i <= pages; i++) {
+        totalPages.push(i + '');
+    }
+
+    ctx.render(moviesTemplate(paginatedMovie, searchTerms.page, totalPages));
+
 }
 
