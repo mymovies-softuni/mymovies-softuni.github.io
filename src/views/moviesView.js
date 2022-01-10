@@ -5,13 +5,15 @@ import { retrieveQuery } from '../services/moviesService.js';
 const moviesTemplate = (movies, activePage, totalPages) => html`
     <h2>Movies Page</h2>
 
-    <nav aria-label="Page navigation example">
+    <nav id="pagination" aria-label="Page navigation example">
         <ul class="pagination">
             ${totalPages.map(page => html`<li class="page-item"><a class="page-link" href="/movies?page=${page}" ${activePage == page ? 'active' : null}>${page}</a></li>`)}
         </ul>
     </nav>
+    <div id="movies">
+        ${movies.map(m => html`${movieTemplate(m)}`)}
+    </div>
     
-    ${movies.map(m => html`${movieTemplate(m)}`)}
 `;
 
 const movieTemplate = (movie) => html`

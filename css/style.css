@@ -40,7 +40,8 @@ body {
 
 .card {
     display: inline-block;
-    margin: 20px 20px;
+    margin: auto;
+    width: 50%;
     vertical-align: top;
 }
 
@@ -60,9 +61,18 @@ body {
 .site-wrapper {
     max-width: 1200px;
     margin:auto;
-    padding: 20px 20px;
+    padding: 10px 10px;
 
 }
-#searchForm {
-  margin:auto;
+.pagination {
+  margin: auto;
+  width: 30%;
 }
+
+#movies {
+  padding: 15px 15px;
+  margin: auto;
+
+}
+
+
