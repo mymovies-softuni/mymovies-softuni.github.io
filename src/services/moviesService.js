@@ -80,7 +80,6 @@ export const getMyMovies = async () => {
     }
 };
 
-
 export const searchMovie = async (text) => {
     const Movie = Parse.Object.extend('Movie');
     const query = new Parse.Query('Movie');
@@ -111,9 +110,6 @@ export function parseMoviesData(movie) {
         acc.push(currentMovie);
         return acc
     }, []);
-    if(movies.length == 1) {
-        return movies[0];
-    }
     return movies;
 }
 
@@ -124,4 +120,39 @@ export const countMovies = async () => {
 
     const count = await countQuery.count();
     return count
+}
+
+export const retrieveQuery = (string) => {
+    const queryObj = string.split("&").reduce((acc, current) => {
+        let [ key, value ] = [...current.split("=")];
+        acc[key] = value;
+        return acc;
+    }, {})
+
+    return queryObj;
+}
+
+export const paginateMovies = async (page, searchTerm) => {
+    page = Number(page);
+    const Movie = Parse.Object.extend('Movie');
+    const paginateQuery = new Parse.Query(Movie);
+
+    if(searchTerm) {
+        paginateQuery.fullText('title', searchTerm);
+    }
+
+    if(page > 1) {
+        paginateQuery.limit(6);
+        paginateQuery.skip((page - 1) * 6);
+    } else {
+        paginateQuery.limit(6);
+    }
+
+    try {
+        const currentMovies = await paginateQuery.find();
+        return currentMovies;
+    } catch(err) {
+        return err;
+    }
+    
 }

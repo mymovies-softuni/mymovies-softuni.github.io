@@ -28,9 +28,9 @@ const movieTemplate = (movie, isOwner, onDelete) => html`
 
 export async function moviePage(ctx) {
     try {
-        let movie = await getMovie(ctx.params.id);
-        let isOwner = getCurrentUser().id === movie[0].attributes.owner.id;
-        movie = parseMoviesData(movie);
+        let [ movie ] = [...await getMovie(ctx.params.id)];
+        let isOwner = getCurrentUser().id === movie.attributes.owner.id;
+        [ movie ] = [...parseMoviesData(movie)];
         ctx.render(movieTemplate(movie, isOwner, onDelete));
     } catch(err) {
         return err;
@@ -43,7 +43,7 @@ export async function moviePage(ctx) {
         if(confirm) {
             deleteMovie(ctx.params.id)
                 .then(() => {
-                    ctx.page.redirect('/movies');
+                    ctx.page.redirect('/movies?page=1');
                 });
         }
     }

@@ -31,7 +31,7 @@ export function loginPage(ctx) {
 
         try {
             const user = await authService.login(username, password)
-            ctx.page.redirect('/movies');
+            ctx.page.redirect('/movies?page=1');
             toggleNotification(ctx, { content: 'Successfully logged in!', type: 'success'});
         } catch(err) {
             toggleNotification(ctx, { content: err, type: 'danger'});

@@ -1,6 +1,7 @@
 import { html } from 'https://unpkg.com/lit-html?module';
 import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
 import * as authService from '../services/authService.js';
+import { retrieveQuery } from '../services/moviesService.js';
 
 const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
 <div class="container-fluid">
@@ -15,7 +16,7 @@ const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
         <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-        <a class="nav-link" href="/movies">Movies</a>
+        <a class="nav-link" href="/movies?page=1">Movies</a>
         </li>
         ${ isAuthenticated
             ? html`        
@@ -26,29 +27,29 @@ const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
             : null
         }
     </ul>
-    <form class="d-flex" @submit=${onSearch}>
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+    <form id="searchForm" class="d-flex" @submit=${onSearch}>
+        <input class="form-control me-2" type="search" placeholder="Enter movie name" aria-label="Search" name="search">
         <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
     <ul class="navbar-nav ms-auto">
         ${ isAuthenticated 
             ? html`
                 <li class="nav-item">
-                    <a class="nav-link">Welcome, ${email}</a>
+                    <a class="nav-link">Welcome, <i>${email}</i></a>
                 </li>             
                 <li class="nav-item">
-                    <a @click=${onLogout} class="nav-link" href="javascript:void(0)">| Logout</a>
+                    <a @click=${onLogout} class="nav-link" href="javascript:void(0)">Logout</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/movies/add">| Add movie +</a>
+                    <a class="nav-link" href="/movies/add"><strong>Add movie</strong></a>
                 </li>
             `
             : html`
                 <li lcass="nav-item">
-                    <a class="nav-link">Welcome, Guest.</a>
+                    <a class="nav-link"><i>Welcome, Guest.</i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/register">| Register</a>
+                    <a class="nav-link" href="/register">Register</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/login">Login</a>
@@ -81,9 +82,9 @@ export function renderNavigation(ctx) {
     function onSearch(e) {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const searchTerm = encodeURIComponent(formData.get("search").trim());
+        const searchTerm = formData.get('search');
         if(searchTerm && searchTerm !== '') {
-            ctx.page.redirect(`/movies?search=${searchTerm}`);
+            ctx.page.redirect(`/movies?page=1&search=${searchTerm}`);
         }
         
     }

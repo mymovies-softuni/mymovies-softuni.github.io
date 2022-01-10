@@ -20,7 +20,7 @@ const updateMovieTemplate = (movie, onSave) => html`
 export async function editPage(ctx) {
     try {
         let movie = await getMovie(ctx.params.id);
-        movie = parseMoviesData(movie);
+        [ movie ] = [...parseMoviesData(movie)];
         ctx.render(updateMovieTemplate(movie, onSave));
     } catch(err) {
         alert(err);
