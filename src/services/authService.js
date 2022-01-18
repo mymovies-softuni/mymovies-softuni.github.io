@@ -1,6 +1,3 @@
-import * as request from './requester.js';
-import * as api from './api.js';
-
 Parse.initialize('87kzRb7J5iVV9srchvziUxjOzHe5XZASSe5X9HqA', 'SYwto6A61msEQ6ybX2kTMZF4l8g0aEJ4WZUhDMWV');
 Parse.serverURL = 'https://parseapi.back4app.com';
 
@@ -26,7 +23,6 @@ export async function logout() {
     if(isAuthenticated()) {
         try {
             const response = Parse.User.logOut();
-            return response
         } catch(err) {
             return err;
         }
@@ -53,6 +49,5 @@ export function isAuthenticated() {
     const user = Parse.User.current();
     return Boolean(user);
 }
-
 
 

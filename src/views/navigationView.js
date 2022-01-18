@@ -58,7 +58,6 @@ const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
 export function renderNavigation(ctx) {
     const isAuthenticated = authService.isAuthenticated();
     const currentUserEmail = authService.getCurrentUser().email;
-    console.log(authService.getCurrentUser());
     return navigationTemplate(isAuthenticated, currentUserEmail, onLogout, onSearch);
 
     async function onLogout(e) {

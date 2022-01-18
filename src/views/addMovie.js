@@ -1,6 +1,8 @@
 import { html } from 'https://unpkg.com/lit-html?module';
 import { createMovie } from '../services/moviesService.js';
 import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
+import { loadingTemplate } from './shared/loadingView.js';
+
 
 
 
@@ -19,6 +21,8 @@ const addMovieTemplate = (onAdd) => html`
 
 
 export function addMoviePage(ctx) {
+    ctx.render(addMovieTemplate(onAdd));
+
     async function onAdd(e) {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -27,16 +31,18 @@ export function addMoviePage(ctx) {
         const img = formData.get('image-url');
 
         if((title && title !== '') && (desc && desc !== '') && (img && img !== '')) {   
+            ctx.render(loadingTemplate());
             try {
                 let newMovie = createMovie(title, desc, img);
                 newMovie = await newMovie.save();
                 ctx.page.redirect('/movies/' + newMovie.id);
                 toggleNotification(ctx, { content: `Sucessfully added ${newMovie.get('title')}.`, type: 'success'});
             } catch (err) {
-                toggleNotification(ctx, { content: `${err.message}`, type: 'danger'});
+                toggleNotification(ctx, { content: `${err}`, type: 'danger'});
             }
+        } else {
+            toggleNotification(ctx, { content: `Please make sure that all the fields are filled in.`, type: 'danger'});
         }
             
     }
-    ctx.render(addMovieTemplate(onAdd));
 }

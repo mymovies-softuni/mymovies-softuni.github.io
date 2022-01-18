@@ -1,6 +1,7 @@
 import { html } from 'https://unpkg.com/lit-html?module';
-import { getMovie, parseMoviesData } from '../services/moviesService.js';
+import { getMovie, parseMoviesData, deleteMovie } from '../services/moviesService.js';
 import { getCurrentUser } from '../services/authService.js';
+import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
 
 const movieTemplate = (movie, isOwner, onDelete) => html`
 <div>
@@ -36,15 +37,18 @@ export async function moviePage(ctx) {
         return err;
     }
 
-    function onDelete(e) {
+    async function onDelete(e) {
         e.preventDefault();
 
         confirm('Are you sure about that?');
         if(confirm) {
-            deleteMovie(ctx.params.id)
-                .then(() => {
-                    ctx.page.redirect('/movies?page=1');
-                });
+            try {
+                const result = await deleteMovie(ctx.params.id)
+                console.log(result.status);
+                ctx.page.redirect('/movies?page=1');
+            } catch(err) {
+                toggleNotification(ctx, { content: err.message, type: 'danger'});
+            }
         }
     }
 }

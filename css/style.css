@@ -59,20 +59,24 @@ body {
 }
 
 .site-wrapper {
-    max-width: 1200px;
-    margin:auto;
+    margin: auto;
+    text-align: center;
+    max-width: 1024px;
     padding: 10px 10px;
-
 }
 .pagination {
-  margin: auto;
-  width: 30%;
+  margin-left: 45%;
 }
 
 #movies {
   padding: 15px 15px;
   margin: auto;
-
 }
 
+.loading {
+  margin-top: 50%;
+}
 
+h2 {
+  text-align: left;
+}

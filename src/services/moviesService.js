@@ -1,6 +1,9 @@
 Parse.initialize('87kzRb7J5iVV9srchvziUxjOzHe5XZASSe5X9HqA', 'SYwto6A61msEQ6ybX2kTMZF4l8g0aEJ4WZUhDMWV');
 Parse.serverURL = 'https://parseapi.back4app.com';
 
+import * as request from './requester.js';
+import * as api from './api.js';
+
 export const createMovie = (title, description, imgUrl) => {
     const Movie = Parse.Object.extend('Movie');
     let newMovie = new Movie();
@@ -33,8 +36,6 @@ export const updateMovie = async (id, title, description, imgUrl) => {
         return err;
     }
 }
-
-
 
 export const getMovie = async (id) => {
     const Movie = Parse.Object.extend('Movie');
@@ -158,5 +159,30 @@ export const paginateMovies = async (page, searchTerm, user) => {
     } catch(err) {
         return err;
     }
-    
+}
+
+export function createPagesArray(moviesLength) {
+    let pages = (moviesLength / 6) + 1
+    const totalPages = [];
+    for (let i = 1; i <= pages; i++) {
+        totalPages.push(i + '');
+    }
+    return totalPages;
+}
+
+export const deleteMovie = async (id) => {
+    const Movie = Parse.Object.extend('Movie');
+    const query = new Parse.Query(Movie);
+    query.equalTo("objectId", id);
+
+    try {
+        const movie = await query.first()
+        try {
+            await movie.destroy();
+        } catch (err) {
+            return err;
+        }
+    } catch(err) {
+        return err;
+    }
 }

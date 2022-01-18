@@ -42,10 +42,10 @@ export async function editPage(ctx) {
                 }
 
             } catch(err) {
-                toggleNotification(ctx, { content: `Sucessfully updated ${movie.id}.`, type: 'danger'})
+                toggleNotification(ctx, { content: `${err}.`, type: 'danger'})
             }
         } else {
-            toggleNotification(ctx, { content: `Please make sure that all the fields are filled in.`, type: 'info'});
+            toggleNotification(ctx, { content: `Please make sure that all the fields are filled in.`, type: 'danger'});
         } 
             
     }
