@@ -2,6 +2,7 @@ import { html } from 'https://unpkg.com/lit-html?module';
 import { getMovie, parseMoviesData, deleteMovie } from '../services/moviesService.js';
 import { getCurrentUser } from '../services/authService.js';
 import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
+import { loadingTemplate } from './shared/loadingView.js';
 
 const movieTemplate = (movie, isOwner, onDelete) => html`
 <div>
@@ -28,6 +29,7 @@ const movieTemplate = (movie, isOwner, onDelete) => html`
 `;
 
 export async function moviePage(ctx) {
+    ctx.render(loadingTemplate());
     try {
         let [ movie ] = [...await getMovie(ctx.params.id)];
         let isOwner = getCurrentUser().id === movie.attributes.owner.id;
@@ -42,6 +44,7 @@ export async function moviePage(ctx) {
 
         confirm('Are you sure about that?');
         if(confirm) {
+            ctx.render(loadingTemplate());
             try {
                 const result = await deleteMovie(ctx.params.id)
                 console.log(result.status);

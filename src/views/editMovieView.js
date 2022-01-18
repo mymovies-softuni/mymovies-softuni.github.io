@@ -1,6 +1,7 @@
 import { html } from 'https://unpkg.com/lit-html?module';
 import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
 import { getMovie, parseMoviesData, updateMovie } from '../services/moviesService.js';
+import { loadingTemplate } from './shared/loadingView.js';
 
 const updateMovieTemplate = (movie, onSave) => html`
     <form @submit=${onSave} class="form-signin">
@@ -34,13 +35,13 @@ export async function editPage(ctx) {
         const img = formData.get('image-url');
 
         if((title && title !== '') && (desc && desc !== '') && (img && img !== '')) {
+            ctx.render(loadingTemplate());
             try {
                 const movie = await updateMovie(ctx.params.id, title, desc, img);
                 if(movie) {
                     ctx.page.redirect('/movies/' + ctx.params.id);
                     toggleNotification(ctx, { content: `Sucessfully updated ${movie.get('title')}.`, type: 'success'});
                 }
-
             } catch(err) {
                 toggleNotification(ctx, { content: `${err}.`, type: 'danger'})
             }

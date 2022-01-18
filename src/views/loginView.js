@@ -1,6 +1,7 @@
 import { html } from 'https://unpkg.com/lit-html?module'
 import * as authService from '../services/authService.js';
 import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
+import { loadingTemplate } from './shared/loadingView.js';
 
 
 const loginTemplate = (onLogin) => html`
@@ -29,6 +30,7 @@ export function loginPage(ctx) {
             return;
         }
 
+        ctx.render(loadingTemplate());
         try {
             const user = await authService.login(username, password)
             ctx.page.redirect('/movies?page=1');

@@ -4,8 +4,6 @@ import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
 import { loadingTemplate } from './shared/loadingView.js';
 
 
-
-
 const addMovieTemplate = (onAdd) => html`
     <form @submit=${onAdd} class="form-signin">
         <h2 class="form-signin-heading">Create New Movie</h2>

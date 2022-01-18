@@ -1,6 +1,7 @@
 import { html } from 'https://unpkg.com/lit-html?module'
 import * as authService from '../services/authService.js';
 import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
+import { loadingTemplate } from './shared/loadingView.js';
 
 
 const registerTemplate = (onRegister) => html`
@@ -35,6 +36,7 @@ export function registerPage(ctx) {
             return;
         }
 
+        ctx.render(loadingTemplate());
         try {
             const response = await authService.register(username, password, email).signUp();
             ctx.page.redirect('/');
