@@ -1,9 +1,6 @@
 Parse.initialize('87kzRb7J5iVV9srchvziUxjOzHe5XZASSe5X9HqA', 'SYwto6A61msEQ6ybX2kTMZF4l8g0aEJ4WZUhDMWV');
 Parse.serverURL = 'https://parseapi.back4app.com';
 
-import * as request from './requester.js';
-import * as api from './api.js';
-
 export const createMovie = (title, description, imgUrl) => {
     const Movie = Parse.Object.extend('Movie');
     let newMovie = new Movie();

@@ -68,7 +68,7 @@ export function renderNavigation(ctx) {
             const response = await authService.logout();
             ctx.page.redirect('/');
             toggleNotification(ctx, { content: 'Successfully logged out!', type: 'success'});
-            
+
         } catch (err) {
             toggleNotification(ctx, { content: err, type: 'danger'});
         }
@@ -81,6 +81,7 @@ export function renderNavigation(ctx) {
         const searchTerm = formData.get('search');
         if(searchTerm && searchTerm !== '') {
             ctx.page.redirect(`/movies?page=1&search=${searchTerm}`);
+            e.target.reset();
         }
         
     }
