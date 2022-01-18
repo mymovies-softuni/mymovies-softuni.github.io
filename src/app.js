@@ -3,7 +3,6 @@ import { navigationMiddleware } from './middlewares/navigationMiddleware.js';
 
 import page from "//unpkg.com/page/page.mjs"
 
-import { homePage } from './views/homeView.js';
 import { loginPage } from './views/loginView.js';
 import { moviesPage, myMoviesPage } from './views/moviesView.js';
 import { moviePage } from './views/movieView.js';

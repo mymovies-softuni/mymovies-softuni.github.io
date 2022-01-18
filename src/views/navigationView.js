@@ -1,7 +1,6 @@
 import { html } from 'https://unpkg.com/lit-html?module';
 import { toggleNotification } from '../middlewares/notificationsMiddleware.js';
 import * as authService from '../services/authService.js';
-import { retrieveQuery } from '../services/moviesService.js';
 
 const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
 <div class="container-fluid">
@@ -12,9 +11,6 @@ const navigationTemplate = (isAuthenticated, email, onLogout, onSearch) => html`
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-        <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/">Home</a>
-        </li>
         <li class="nav-item">
         <a class="nav-link" href="/movies?page=1">Movies</a>
         </li>
